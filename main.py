@@ -1171,7 +1171,7 @@ def start_pentagon(event):
     canvas.bind("<B1-Motion>", lambda event: draw_pentagon(event))
     canvas.bind("<ButtonRelease-1>", finish_pentagon)
 
-#오각형 생성하기
+#오각형 생성
 def draw_pentagon(event):
      global current_shape,start_x, start_y
      canvas.delete("temp_shape")
@@ -1191,9 +1191,6 @@ def finish_pentagon(event):
     canvas.unbind("<ButtonRelease-1>")
     if current_shape:
         canvas.itemconfig(current_shape, tags="")
-
-
-
 
 #모양 선택하는 팝업 메뉴
 def choose_shape(event = None):
