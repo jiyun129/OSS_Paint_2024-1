@@ -1158,8 +1158,45 @@ def finish_diamond(event):
     if current_shape:
         canvas.itemconfig(current_shape, tags="")
 
+#오각형 그리기
+def create_pentagon(event=None):
+    select_shape_color()
+    canvas.bind("<Button-1>", start_pentagon)
+
+#오각형 그릴 위치 정하고 생성하는 함수 호출
+def start_pentagon(event):
+    global start_x, start_y, current_shape
+    start_x, start_y = event.x, event.y
+    current_shape = None
+    canvas.bind("<B1-Motion>", lambda event: draw_pentagon(event))
+    canvas.bind("<ButtonRelease-1>", finish_pentagon)
+
+#오각형 생성하기
+def draw_pentagon(event):
+     global current_shape,start_x, start_y
+     canvas.delete("temp_shape")
+     radius = math.sqrt((event.x-start_x)**2+(event.y - start_y)**2)
+     points = []
+     for i in range(5):
+         angle = math.radians(72*i-90)
+         x = start_x +radius * math.cos(angle)
+         y = start_y+radius * math.sin(angle)
+         points.extend([x, y])
+     current_shape = canvas.create_polygon(points, outline=shape_outline_color, fill=shape_fill_color, tags="temp_shape")
+
+#오각형 그리기 종료
+def finish_pentagon(event):
+    global current_shape
+    canvas.unbind("<B1-Motion>")
+    canvas.unbind("<ButtonRelease-1>")
+    if current_shape:
+        canvas.itemconfig(current_shape, tags="")
+
+
+
+
 #모양 선택하는 팝업 메뉴
-def choose_shape(event):
+def choose_shape(event = None):
     popup = Menu(window, tearoff=0)
     popup.add_command(label="Rectangle", command=lambda: create_rectangle(event))
     popup.add_command(label="Triangle", command=lambda: create_triangle(event))
@@ -1169,6 +1206,9 @@ def choose_shape(event):
     popup.add_command(label="Heart", command=lambda: create_heart(event))
     popup.add_command(label="Cross", command=lambda: create_cross(event))
     popup.add_command(label="Diamond", command=lambda: create_diamond(event))
+    popup.add_command(label="Pentagon", command=lambda: create_pentagon(event))
+    window_center_x = window.winfo_rootx() + window.winfo_width() // 2
+    window_center_y = window.winfo_rooty() + window.winfo_height() // 2
     popup.post(event.x_root, event.y_root)  # 이벤트가 발생한 위치에 팝업 메뉴 표시
 
 
